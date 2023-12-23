@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 2372
+  Left = 659
   Height = 475
-  Top = 222
+  Top = 97
   Width = 475
   BorderIcons = [biSystemMenu]
   Caption = 'Colors+'

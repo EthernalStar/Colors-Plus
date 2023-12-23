@@ -373,8 +373,11 @@ begin
   PageControl1.Enabled := False;  //Toggle PageControl to prevent Bugs
 
   ShowMessage('The Software will now attempt to set the Overlay on all Monitors. If this does not look right please adjust the placement with the Position and Dimension TrackBars.');  //Display Infobox
+
   Form2.Width := GetFullWidth;  //Set Full Width
   Form2.Height := GetFullHeight;  //Set Fullt Height
+  Form2.Top := Screen.Monitors[0].Top;  //Set Top
+  Form2.Left := Screen.Monitors[0].Left;  //Set Left
 
   TrackBar2.Position := Form2.Left;  //Reset TrackBar
   TrackBar3.Position := Form2.Top;  //Reset TrackBar
