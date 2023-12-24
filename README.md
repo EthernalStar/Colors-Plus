@@ -10,7 +10,7 @@ The Tool was tested with Windows 10 but should also work with Windows 11.
 **Please Read the Instructions with care to avoid breaking something**  
   
 The Tool itself is structured into two main segments:  
-1. The Main Settings Window where you can edit the Overlay
+1. The Main Settings Window where you can edit the Overlay.
 2. The Overlay itself.
   
 **Also the Tool may be flagged as a false positive by your System.**
@@ -48,8 +48,8 @@ The Possibilities of using this Tool for useful or unuseful things are endless.
 ### Building
 
 There should not be any Problem building the Application because it does not rely on any external installed Packages.  
-To build the Project you need to have the Lazarus IDE (I used Version 2.2.6) installed and clone this Repository to yor local Machine.  
-Now just open the lpr file in your Lazarus Installation and you should be able to edit and compile the Project.  
+To build the Project you need to have the Lazarus IDE Version 2.2.6 installed and clone this Repository to yor local Machine.  
+Now just open the .lpr file in your Lazarus Installation and you should be able to edit and compile the Project.  
   
 
 ## Issues
