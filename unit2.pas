@@ -21,7 +21,6 @@ type
     procedure FormWindowStateChange(Sender: TObject); 
     procedure CreateNewImage(const filename: String);
     procedure CustomOnDblClick(Sender: TObject);
-    procedure BringImageToFront(Sender: TObject);
     procedure DragCustomImage(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x,y: Integer);
     procedure MoveCustomObject(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure StopDragging(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -45,56 +44,47 @@ uses unit1;
 
 { TForm2 }
 
-procedure TForm2.BringImageToFront(Sender: TObject);  //Bring Dynamically Created Images to Front by Right Click
-var
-  img: TImage;  //Temporary Image
+procedure TForm2.DragCustomImage(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x,y: Integer);   //Click Logic on Images
 begin
 
-  img := TImage(Sender);  //Assign Sender to Image
+  if Button = mbLeft then begin  //Left Mouse Button Event
 
-  img.BringToFront;
-
-end;
-
-procedure TForm2.DragCustomImage(Sender: TObject; Button: TMouseButton; Shift: TShiftState; x,y: Integer);
-begin
-
-  if Button = mbLeft then begin
-
-    FCurrentDragObject := TImage(Sender);
-    FStartDragPos := FCurrentDragObject.ClientToScreen(Point(x,y));
+    FCurrentDragObject := TImage(Sender);  //Set new Object
+    FStartDragPos := FCurrentDragObject.ClientToScreen(Point(x, y));  //Get Start Position for Dragging
 
   end
-  else if Button = mbRight then begin
+  else if Button = mbRight then begin  //Right Mouse Button Event
 
-    FCurrentDragObject := TImage(Sender);
-    FCurrentDragObject.BringToFront;
+    FCurrentDragObject := TImage(Sender);  //Set new Object
+    FCurrentDragObject.BringToFront;  //Bring to Front
 
   end;
 
 end;
 
-procedure TForm2.MoveCustomObject(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+procedure TForm2.MoveCustomObject(Sender: TObject; Shift: TShiftState; X, Y: Integer);  //Dynamic Image Movement Code
 var
-  CurrentPos, DeltaPos: TPoint;
+  CurrentPos, DeltaPos: TPoint;  //Point Variables for Positions
 begin
 
-  if FCurrentDragObject <> nil then begin
+  if FCurrentDragObject <> nil then begin   //Check if Object is not empty
 
-    CurrentPos := Mouse.CursorPos;
-    DeltaPos.X := CurrentPos.X - FStartDragPos.X;
-    DeltaPos.Y := CurrentPos.Y - FStartDragPos.Y;
+    CurrentPos := Mouse.CursorPos;  //Get Mouse Position
+    DeltaPos.X := CurrentPos.X - FStartDragPos.X;  //Delta of Position
+    DeltaPos.Y := CurrentPos.Y - FStartDragPos.Y;  //Delta of Position
 
-    FCurrentDragObject.Left := FStartDragPos.X + DeltaPos.X - Form2.ClientOrigin.X;
-    FCurrentDragObject.Top := FStartDragpos.Y + DeltaPos.y - Form2.ClientOrigin.Y;
+    FCurrentDragObject.Left := FStartDragPos.X + DeltaPos.X - Form2.ClientOrigin.X - Round(FCurrentDragObject.Width / 2);  //Set new Left Value and take notice of Object Width
+    FCurrentDragObject.Top := FStartDragpos.Y + DeltaPos.y - Form2.ClientOrigin.Y - Round(FCurrentDragObject.Height / 2);  //Set new Top Value and take notice of Object Height
 
   end;
 
 end;
 
-procedure TForm2.StopDragging(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+procedure TForm2.StopDragging(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);  //Stop Dragging of Dynamic Images
 begin
-  FCurrentDragObject := nil;
+
+  FCurrentDragObject := nil;  //Just unselect the current Object
+
 end;
 
 procedure TForm2.CustomOnDblClick(Sender: TObject);
@@ -120,31 +110,30 @@ var
   img: TImage = nil;  //New Image Variable
 begin
 
-  img := TImage.Create(Self);
-  img.Parent := Form2;
-
-  img.Stretch := True;
+  img := TImage.Create(Self);  //Create new Image
+  img.Parent := Form2;  //Set Overlay as Parent
 
   img.AutoSize := Form1.RadioButton1.Checked;  //If Full Size is Checked in RadioGroup
 
   if Form1.RadioButton2.Checked = True then begin
-
-    img.Height := Form1.SpinEdit1.Value;
-    img.Width := Form1.SpinEdit2.Value;
+                                         
+    img.Stretch := True;  //Set Strectch True
+    img.Height := Form1.SpinEdit1.Value;  //Set Height
+    img.Width := Form1.SpinEdit2.Value;  //Set Width
 
   end;
 
-  img.Caption := 'CDI';
+  img.Caption := 'CDI';  //Set Caption to mark this Image as a Dynamic one (For later Image Deletion)
 
-  img.Left := 0;
-  img.Top := 0;
+  img.Left := 0;  //Set Left
+  img.Top := 0;  //Set Top
 
-  img.Picture.LoadFromFile(filename);
+  img.Picture.LoadFromFile(filename);  //Load the Image from the selected File
 
-  img.OnMouseDown := @DragCustomImage;
-  img.OnMouseMove := @MoveCustomObject;
-  img.OnMouseUp := @StopDragging;
-  img.OnDblClick := @CustomOnDblClick;
+  img.OnMouseDown := @DragCustomImage;  //References to needed custom functions
+  img.OnMouseMove := @MoveCustomObject;  //References to needed custom functions
+  img.OnMouseUp := @StopDragging;  //References to needed custom functions
+  img.OnDblClick := @CustomOnDblClick;  //References to needed custom functions
 
 end;
 

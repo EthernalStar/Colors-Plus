@@ -641,7 +641,7 @@ end;
 procedure TForm1.Timer1Timer(Sender: TObject);  //Window Fit Timer
 begin
 
-  GetWindowRect(IntToStr(Edit1.Text), ExpRect);  //Get Target Window Rect
+  GetWindowRect(StrToInt(Edit1.Text), ExpRect);  //Get Target Window Rect
   SetWindowPos(Form2.Handle, 0, ExpRect.Left, ExpRect.Top, ExpRect.Width, ExpRect.Height, SWP_NOZORDER or SWP_NOACTIVATE);  //Set New Position of Overlay
 
 end;

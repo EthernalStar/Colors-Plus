@@ -416,6 +416,10 @@ begin
 
   ToggleBox2.Checked := False;  //Reset Text Image Priority
 
+  ToggleBox3.Checked := False;  //Reset Window Tracking Status
+
+  Edit1.Text := '0';  //Reset Handle Edit Field
+
   SetWindowLongPtr(Form2.Handle, GWL_EXSTYLE, GetWindowLongPtr(Form2.Handle, GWL_EXSTYLE) OR $00080020);  //Reset Click Through
 
   RadioButton1.Checked := True;  //Reset Sizemode of Dynamic Images
