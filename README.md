@@ -38,7 +38,7 @@ Here are some situations where I use this Tool:
 
 Making a bright Screen without Brightness Controll darker when working late at night.  
 
-Showing text notes on screen above all Windows to keep track of something (Used together with Color transparency to disable screen darkening).  
+Showing text notes on screen above all Windows to keep track of something (Used together with Color transparency).  
 
 Attaching the Overlay to any Window for individual configurations (Use [WinEdit Dx](https://github.com/EthernalStar/WinEdit-Dx) for obtaining the Window Handles).  
 
