@@ -116,7 +116,9 @@ object Form2: TForm2
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDblClick = FormDblClick
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
   LCLVersion = '2.2.6.0'
@@ -134,5 +136,15 @@ object Form2: TForm2
     Font.Quality = fqDraft
     ParentColor = False
     ParentFont = False
+    OnDblClick = FormDblClick
+  end
+  object Image1: TImage
+    Left = 0
+    Height = 240
+    Top = 0
+    Width = 320
+    Align = alClient
+    OnDblClick = FormDblClick
+    Stretch = True
   end
 end

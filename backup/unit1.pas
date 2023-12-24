@@ -5,8 +5,8 @@ unit Unit1;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  ExtCtrls, ExtDlgs, Unit2, Windows;
+  Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
+  ExtCtrls, ExtDlgs, Spin, Unit2;
 
 type
 
@@ -18,6 +18,10 @@ type
     Button11: TButton;
     Button12: TButton;
     Button13: TButton;
+    Button14: TButton;
+    Button15: TButton;
+    Button16: TButton;
+    Button17: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -28,7 +32,9 @@ type
     Button9: TButton;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
+    CheckBox3: TCheckBox;
     CheckGroup1: TCheckGroup;
+    CheckGroup2: TCheckGroup;
     ColorDialog1: TColorDialog;
     FontDialog1: TFontDialog;
     GroupBox1: TGroupBox;
@@ -38,9 +44,13 @@ type
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
     GroupBox7: TGroupBox;
+    GroupBox8: TGroupBox;
+    GroupBox9: TGroupBox;
     Image1: TImage;
     Label1: TLabel;
     Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -50,6 +60,7 @@ type
     Label8: TLabel;
     Label9: TLabel;
     Memo1: TMemo;
+    OpenDialog1: TOpenDialog;
     OpenPictureDialog1: TOpenPictureDialog;
     PageControl1: TPageControl;
     Panel1: TPanel;
@@ -67,10 +78,17 @@ type
     Panel7: TPanel;
     Panel8: TPanel;
     Panel9: TPanel;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    RadioGroup1: TRadioGroup;
+    SaveDialog1: TSaveDialog;
+    SpinEdit1: TSpinEdit;
+    SpinEdit2: TSpinEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet4: TTabSheet;
     ToggleBox1: TToggleBox;
+    ToggleBox2: TToggleBox;
     TrackBar1: TTrackBar;
     TrackBar2: TTrackBar;
     TrackBar3: TTrackBar;
@@ -83,6 +101,10 @@ type
     procedure Button11Click(Sender: TObject);
     procedure Button12Click(Sender: TObject);
     procedure Button13Click(Sender: TObject);
+    procedure Button14Click(Sender: TObject);
+    procedure Button15Click(Sender: TObject);
+    procedure Button16Click(Sender: TObject);
+    procedure Button17Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -94,11 +116,14 @@ type
     procedure Button9Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
+    procedure CheckBox3Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure ColorPanelClick(Sender: TPanel);
     procedure Memo1Change(Sender: TObject);
+    procedure RadioButton1Change(Sender: TObject);
     procedure ToggleBox1Change(Sender: TObject);
+    procedure ToggleBox2Change(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
     procedure TrackBar6Change(Sender: TObject);
@@ -264,15 +289,76 @@ begin
 end;
 
 procedure TForm1.Button12Click(Sender: TObject);  //Delete all Images
+var
+  i: Integer = 0;  //Counter Variable for Dynamic Images
+  img: TImage = nil;  //Temporary Image Control
 begin
+
   Form2.Image1.Picture.Clear;  //Reset Fullscreen Stretched Image
+
+  for i := 0 to Form2.ComponentCount - 1 do begin  //Iterate through all Components on the Overlay
+
+    if Form2.Components[i] is TImage then begin  //Check for TImage
+
+      img := TImage(Form2.Components[i]);  //Assign Image
+
+      if img.Caption = 'CDI' then begin  //Check if Custom Dynamic Image (Through 'CDI' Caption)
+
+        img.Picture.Clear;  //Clear Dynamic Image
+
+      end;
+
+    end;
+
+  end;
+
 end;
 
 procedure TForm1.Button13Click(Sender: TObject);  //Makes the Overlay appear as a normal Window wich can be edited by hand
 begin
 
-  Form2.Image1.Picture.PNG.LoadFromDevice(Screen.PrimaryMonitor.Handle);
+  ShowMessage('You can now freely move the Overlay as a normal Window.' + LineEnding + 'After you are done you should doubleclick the Overlay Window.');  //Show Info Message
+  
+  Form2.BorderStyle := bsSizeable;  //Make Overlay Form Sizeable
 
+  Form2.WindowState := wsNormal;  //Normalize the State of the Overlay Form
+
+end;
+
+procedure TForm1.Button14Click(Sender: TObject);  //Creates new Images on the Fly
+begin
+
+  if OpenPictureDialog1.Execute then begin
+
+    Form2.CreateNewImage(OpenPictureDialog1.FileName);  //Call Procedure
+
+  end;
+
+end;
+
+procedure TForm1.Button15Click(Sender: TObject);  //Save to Textfile
+begin
+
+  if OpenDialog1.Execute = True then begin
+
+    Memo1.Lines.LoadFromFile(OpenDialog1.FileName);  //Save Memo Contents to a Textfile
+
+  end;
+
+end;
+
+procedure TForm1.Button16Click(Sender: TObject);  //Export to Textfile
+begin
+  if SaveDialog1.Execute then begin
+
+    Memo1.Lines.SaveToFile(SaveDialog1.FileName);  //Export Memo Contents to a Textfile
+
+  end;
+end;
+
+procedure TForm1.Button17Click(Sender: TObject);  //Clear the Text of the Memo
+begin
+  Memo1.Clear;  //Just Clear the Memo Contents
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);  //Open ColorDialog
@@ -296,6 +382,17 @@ end;
 procedure TForm1.Button4Click(Sender: TObject);  //Reset Overlay
 begin
 
+  Form2.BorderStyle := bsNone;  //Reset BorderStyle
+
+  ToggleBox2.Checked := False;  //Reset Text Image Priority
+
+  SetWindowLongPtr(Form2.Handle, GWL_EXSTYLE, GetWindowLongPtr(Form2.Handle, GWL_EXSTYLE) OR $00080020);  //Reset Click Through
+
+  RadioButton1.Checked := True;  //Reset Sizemode of Dynamic Images
+
+  SpinEdit1.Value := 64;  //Reset Stretched Size SpinEdits
+  SpinEdit2.Value := 64;  //Reset Stretched Size SpinEdits
+
   Form2.Left := 0;  //X Position
   Form2.Top := 0;   //Y Position
   Form2.Width := Screen.Width;  //Width
@@ -316,7 +413,7 @@ begin
 
   Memo1.Clear;  //Clears Text Memo
 
-  Form2.Image1.Picture.Clear;  //Reset Fullscreen Stretched Image
+  Button12.Click;  //Delete Images Button
 
   InitialFont := Label10.Font;  //Trick to get the default Label Font (The Label is a clone of the Overlay Text Label but invisible and on the Mainform
 
@@ -370,9 +467,9 @@ end;
 procedure TForm1.Button9Click(Sender: TObject);  //Get full predicted Width and Height of the Monotors and set the Overlay size acording to this
 begin
 
-  PageControl1.Enabled := False;  //Toggle PageControl to prevent Bugs
-
   ShowMessage('The Software will now attempt to set the Overlay on all Monitors. If this does not look right please adjust the placement with the Position and Dimension TrackBars.');  //Display Infobox
+
+  PageControl1.Enabled := False;  //Toggle PageControl to prevent Bugs
 
   Form2.Width := GetFullWidth;  //Set Full Width
   Form2.Height := GetFullHeight;  //Set Fullt Height
@@ -415,6 +512,22 @@ begin
   else begin
 
     TrayIcon1.Visible := True;  //Show TrayIcon
+
+  end;
+
+end;
+
+procedure TForm1.CheckBox3Change(Sender: TObject);  //Self Setting to switch off Overlay Topmost status
+begin
+
+  if CheckBox3.Checked then begin
+
+    SetWindowPos(Form2.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE or SWP_NOACTIVATE);  //Remove Window Topmost State
+
+  end
+  else begin
+
+    SetWindowPos(Form2.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE or SWP_NOSIZE or SWP_NOACTIVATE);  //Set Window Topmost State
 
   end;
 
@@ -471,6 +584,13 @@ begin
 
 end;
 
+procedure TForm1.RadioButton1Change(Sender: TObject);  //RadioGroup Size Options (Gets called by all RadioButtons)
+begin
+
+  CheckGroup2.Enabled := RadioButton2.Checked;  //Enable CheckGroup for Stretched Size of Dynamic Images
+
+end;
+
 procedure TForm1.ToggleBox1Change(Sender: TObject);
 begin
 
@@ -484,6 +604,25 @@ begin
   else begin
 
     ToggleBox1.Caption := 'Turn Overlay Off';
+
+  end;
+
+end;
+
+procedure TForm1.ToggleBox2Change(Sender: TObject);
+begin
+
+  if ToggleBox2.Checked = True then begin
+
+    ToggleBox2.Caption := 'Priority: Text over Images';  //Change Caption of ToggleBox
+    Form2.Label1.BringToFront;  //Bring Text to Front
+
+  end
+  else begin
+
+    ToggleBox2.Caption := 'Priority: Images over Text';  //Change Caption of ToggleBox
+    Form2.Image1.BringToFront;  //Bring Image to Front
+    Form2.Label1.SendToBack;
 
   end;
 

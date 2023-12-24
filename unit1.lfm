@@ -1,7 +1,7 @@
 object Form1: TForm1
-  Left = 659
+  Left = 403
   Height = 475
-  Top = 97
+  Top = 142
   Width = 475
   BorderIcons = [biSystemMenu]
   Caption = 'Colors+'
@@ -494,41 +494,51 @@ object Form1: TForm1
         OnChange = ToggleBox1Change
         TabOrder = 4
       end
-      object Button8: TButton
+      object GroupBox8: TGroupBox
         Left = 237
-        Height = 25
-        Top = 375
+        Height = 161
+        Top = 119
         Width = 220
-        Caption = 'Fix Color'
-        OnClick = Button8Click
+        Caption = 'Overlay Options'
+        ClientHeight = 141
+        ClientWidth = 216
         TabOrder = 5
-      end
-      object Button10: TButton
-        Left = 237
-        Height = 25
-        Top = 311
-        Width = 220
-        Caption = 'Full Size on current Screen'
-        OnClick = Button10Click
-        TabOrder = 6
-      end
-      object Button9: TButton
-        Left = 237
-        Height = 25
-        Top = 343
-        Width = 220
-        Caption = 'Full Size on all Screens'
-        OnClick = Button9Click
-        TabOrder = 7
-      end
-      object Button13: TButton
-        Left = 237
-        Height = 25
-        Top = 280
-        Width = 220
-        Caption = 'Edit Overlay by Hand'
-        OnClick = Button13Click
-        TabOrder = 8
+        object Button13: TButton
+          Left = 10
+          Height = 25
+          Top = 40
+          Width = 196
+          Caption = 'Edit Overlay by Hand'
+          OnClick = Button13Click
+          TabOrder = 0
+        end
+        object Button10: TButton
+          Left = 10
+          Height = 25
+          Top = 72
+          Width = 196
+          Caption = 'Full Size on current Screen'
+          OnClick = Button10Click
+          TabOrder = 1
+        end
+        object Button9: TButton
+          Left = 10
+          Height = 25
+          Top = 104
+          Width = 196
+          Caption = 'Full Size on all Screens'
+          OnClick = Button9Click
+          TabOrder = 2
+        end
+        object Button8: TButton
+          Left = 10
+          Height = 25
+          Top = 8
+          Width = 196
+          Caption = 'Fix Color on Multi Monitor Setup'
+          OnClick = Button8Click
+          TabOrder = 3
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -537,11 +547,11 @@ object Form1: TForm1
       ClientWidth = 467
       object GroupBox6: TGroupBox
         Left = 8
-        Height = 326
+        Height = 398
         Top = 10
         Width = 212
         Caption = 'Text'
-        ClientHeight = 306
+        ClientHeight = 378
         ClientWidth = 208
         TabOrder = 0
         object Memo1: TMemo
@@ -550,13 +560,15 @@ object Form1: TForm1
           Top = 8
           Width = 192
           OnChange = Memo1Change
+          ScrollBars = ssAutoBoth
           TabOrder = 0
+          WordWrap = False
         end
         object Button7: TButton
           Left = 8
           Height = 25
-          Top = 200
-          Width = 193
+          Top = 192
+          Width = 89
           Caption = 'Edit Font'
           OnClick = Button7Click
           TabOrder = 1
@@ -564,7 +576,7 @@ object Form1: TForm1
         object Label8: TLabel
           Left = 8
           Height = 20
-          Top = 237
+          Top = 239
           Width = 12
           Caption = 'X:'
           Font.CharSet = ANSI_CHARSET
@@ -577,7 +589,7 @@ object Form1: TForm1
         object Label9: TLabel
           Left = 9
           Height = 20
-          Top = 269
+          Top = 277
           Width = 11
           Caption = 'Y:'
           Font.CharSet = ANSI_CHARSET
@@ -590,7 +602,7 @@ object Form1: TForm1
         object TrackBar6: TTrackBar
           Left = 32
           Height = 25
-          Top = 232
+          Top = 234
           Width = 174
           Frequency = 5
           OnChange = TrackBar6Change
@@ -600,21 +612,48 @@ object Form1: TForm1
         object TrackBar7: TTrackBar
           Left = 32
           Height = 25
-          Top = 264
+          Top = 272
           Width = 174
           Frequency = 5
           OnChange = TrackBar6Change
           Position = 0
           TabOrder = 3
         end
+        object Button15: TButton
+          Left = 8
+          Height = 25
+          Top = 312
+          Width = 193
+          Caption = 'Import from Textfile'
+          OnClick = Button15Click
+          TabOrder = 4
+        end
+        object Button16: TButton
+          Left = 8
+          Height = 25
+          Top = 344
+          Width = 193
+          Caption = 'Save as Textfile'
+          OnClick = Button16Click
+          TabOrder = 5
+        end
+        object Button17: TButton
+          Left = 111
+          Height = 25
+          Top = 192
+          Width = 89
+          Caption = 'Clear Text'
+          OnClick = Button17Click
+          TabOrder = 6
+        end
       end
       object GroupBox7: TGroupBox
         Left = 240
-        Height = 326
+        Height = 398
         Top = 10
         Width = 212
         Caption = 'Images'
-        ClientHeight = 306
+        ClientHeight = 378
         ClientWidth = 208
         TabOrder = 1
         object Button11: TButton
@@ -629,12 +668,148 @@ object Form1: TForm1
         object Button12: TButton
           Left = 10
           Height = 25
-          Top = 264
+          Top = 344
           Width = 187
           Caption = 'Delete all Images'
           OnClick = Button12Click
           TabOrder = 1
         end
+        object GroupBox9: TGroupBox
+          Left = 10
+          Height = 281
+          Top = 48
+          Width = 187
+          Caption = 'Dynamic Image Creation'
+          ClientHeight = 261
+          ClientWidth = 183
+          TabOrder = 2
+          object Button14: TButton
+            Left = 10
+            Height = 25
+            Top = 10
+            Width = 166
+            Caption = 'Create a new Image'
+            OnClick = Button14Click
+            TabOrder = 0
+          end
+          object RadioGroup1: TRadioGroup
+            Left = 10
+            Height = 49
+            Top = 48
+            Width = 166
+            AutoFill = True
+            Caption = 'Options'
+            ChildSizing.LeftRightSpacing = 6
+            ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+            ChildSizing.EnlargeVertical = crsHomogenousChildResize
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 2
+            ClientHeight = 29
+            ClientWidth = 162
+            Columns = 2
+            TabOrder = 1
+            object RadioButton1: TRadioButton
+              Left = 6
+              Height = 29
+              Top = 0
+              Width = 60
+              Caption = 'Full'
+              Checked = True
+              OnChange = RadioButton1Change
+              TabOrder = 1
+              TabStop = True
+            end
+            object RadioButton2: TRadioButton
+              Left = 66
+              Height = 29
+              Top = 0
+              Width = 90
+              Caption = 'Stretched'
+              TabOrder = 0
+            end
+          end
+          object CheckGroup2: TCheckGroup
+            Left = 10
+            Height = 56
+            Top = 104
+            Width = 166
+            AutoFill = True
+            Caption = 'Stretched Height/Width'
+            ChildSizing.LeftRightSpacing = 6
+            ChildSizing.TopBottomSpacing = 6
+            ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+            ChildSizing.EnlargeVertical = crsHomogenousChildResize
+            ChildSizing.ShrinkHorizontal = crsScaleChilds
+            ChildSizing.ShrinkVertical = crsScaleChilds
+            ChildSizing.Layout = cclLeftToRightThenTopToBottom
+            ChildSizing.ControlsPerLine = 3
+            ClientHeight = 36
+            ClientWidth = 162
+            Columns = 3
+            Enabled = False
+            TabOrder = 2
+            object SpinEdit1: TSpinEdit
+              Left = 6
+              Height = 24
+              Top = 6
+              Width = 64
+              MaxValue = 9999
+              MinValue = 1
+              TabOrder = 0
+              Value = 64
+            end
+            object Label11: TLabel
+              Left = 70
+              Height = 24
+              Top = 6
+              Width = 23
+              Alignment = taCenter
+              Caption = 'X'
+              Font.CharSet = ANSI_CHARSET
+              Font.Height = -16
+              Font.Pitch = fpVariable
+              Font.Quality = fqDraft
+              ParentColor = False
+              ParentFont = False
+            end
+            object SpinEdit2: TSpinEdit
+              Left = 93
+              Height = 24
+              Top = 6
+              Width = 63
+              MaxValue = 9999
+              MinValue = 1
+              TabOrder = 1
+              Value = 64
+            end
+          end
+          object Label12: TLabel
+            Left = 10
+            Height = 96
+            Top = 162
+            Width = 166
+            Alignment = taCenter
+            AutoSize = False
+            Caption = 'How to move Dynamic Images:'#13#10'Use the Edit Overlay by Hand'#13#10'Button from the first Page and'#13#10'drag the Images to their new'#13#10'Position. Right Click Changes'#13#10'Priority and Double Click exits'#13#10'manual editing mode.'
+            Font.CharSet = ANSI_CHARSET
+            Font.Height = -11
+            Font.Pitch = fpVariable
+            Font.Quality = fqDraft
+            ParentColor = False
+            ParentFont = False
+          end
+        end
+      end
+      object ToggleBox2: TToggleBox
+        Left = 8
+        Height = 25
+        Top = 416
+        Width = 444
+        Caption = 'Priority: Images over Text'
+        OnChange = ToggleBox2Change
+        TabOrder = 2
       end
     end
     object TabSheet4: TTabSheet
@@ -793,17 +968,26 @@ object Form1: TForm1
         TabOrder = 4
         object CheckBox1: TCheckBox
           Left = 6
-          Height = 37
+          Height = 25
           Top = 6
           Width = 196
           Caption = 'Disable Topmost Status'
           OnChange = CheckBox1Change
           TabOrder = 0
         end
+        object CheckBox3: TCheckBox
+          Left = 6
+          Height = 25
+          Top = 31
+          Width = 196
+          Caption = 'Disable Overlay Topmost Status'
+          OnChange = CheckBox3Change
+          TabOrder = 2
+        end
         object CheckBox2: TCheckBox
           Left = 6
-          Height = 36
-          Top = 43
+          Height = 23
+          Top = 56
           Width = 196
           Caption = 'Disable Tray Icon'
           OnChange = CheckBox2Change
@@ -974,6 +1158,20 @@ object Form1: TForm1
   object OpenPictureDialog1: TOpenPictureDialog
     Title = 'Load Image'
     Left = 87
+    Top = 447
+  end
+  object OpenDialog1: TOpenDialog
+    Title = 'Open a Textfile'
+    DefaultExt = '.txt'
+    Filter = 'Textfiles|*.txt'
+    Left = 116
+    Top = 447
+  end
+  object SaveDialog1: TSaveDialog
+    Title = 'Save Textfile as'
+    DefaultExt = '.txt'
+    Filter = 'Textfiles|*.txt'
+    Left = 145
     Top = 447
   end
 end
