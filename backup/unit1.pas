@@ -22,6 +22,7 @@ type
     Button15: TButton;
     Button16: TButton;
     Button17: TButton;
+    Button18: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -36,8 +37,10 @@ type
     CheckGroup1: TCheckGroup;
     CheckGroup2: TCheckGroup;
     ColorDialog1: TColorDialog;
+    Edit1: TEdit;
     FontDialog1: TFontDialog;
     GroupBox1: TGroupBox;
+    GroupBox10: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -84,11 +87,14 @@ type
     SaveDialog1: TSaveDialog;
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
+    SpinEdit3: TSpinEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet4: TTabSheet;
+    Timer1: TTimer;
     ToggleBox1: TToggleBox;
     ToggleBox2: TToggleBox;
+    ToggleBox3: TToggleBox;
     TrackBar1: TTrackBar;
     TrackBar2: TTrackBar;
     TrackBar3: TTrackBar;
@@ -105,6 +111,7 @@ type
     procedure Button15Click(Sender: TObject);
     procedure Button16Click(Sender: TObject);
     procedure Button17Click(Sender: TObject);
+    procedure Button18Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -122,8 +129,11 @@ type
     procedure ColorPanelClick(Sender: TPanel);
     procedure Memo1Change(Sender: TObject);
     procedure RadioButton1Change(Sender: TObject);
+    procedure SpinEdit3Change(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
     procedure ToggleBox1Change(Sender: TObject);
     procedure ToggleBox2Change(Sender: TObject);
+    procedure ToggleBox3Change(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
     procedure TrackBar6Change(Sender: TObject);
@@ -140,6 +150,7 @@ type
 var
   Form1: TForm1;
   InitialFont: TFont;  //Font used to Reset the Font Dialog
+  ExpRect: TRect;  //Variable for the Experimental Window Fit Feature
 
   const License = 'Colors+ is licensed under the' + LineEnding +
                   'GNU General Public License v3.0.' + LineEnding +
@@ -361,6 +372,25 @@ begin
   Memo1.Clear;  //Just Clear the Memo Contents
 end;
 
+procedure TForm1.Button18Click(Sender: TObject);  //Fit the Overlay on the choosen Screen
+begin
+  
+  PageControl1.Enabled := False;  //Toggle PageControl to prevent Bugs
+
+  Form2.Width := Screen.Monitors[SpinEdit3.Value].Width;  //Set Width
+  Form2.Height := Screen.Monitors[SpinEdit3.Value].Height;  //Set Height
+  Form2.Top := Screen.Monitors[SpinEdit3.Value].Top;  //Set Top
+  Form2.Left := Screen.Monitors[SpinEdit3.Value].Left;  //Set Left
+
+  TrackBar2.Position := Form2.Left;  //Reset TrackBar
+  TrackBar3.Position := Form2.Top;  //Reset TrackBar
+  TrackBar4.Position := Form2.Width;  //Reset TrackBar
+  TrackBar5.Position := Form2.Height;  //Reset TrackBar
+
+  PageControl1.Enabled := True;  //Toggle PageControl to prevent Bugs
+
+end;
+
 procedure TForm1.Button2Click(Sender: TObject);  //Open ColorDialog
 begin
 
@@ -393,17 +423,18 @@ begin
   SpinEdit1.Value := 64;  //Reset Stretched Size SpinEdits
   SpinEdit2.Value := 64;  //Reset Stretched Size SpinEdits
 
+  TrackBar1.Position := 54;  //Force Movement of TrackBar to reset Color Transparency
+  TrackBar1.Position := 55;  //Set Transparency to Original Value
+
   Form2.Left := 0;  //X Position
   Form2.Top := 0;   //Y Position
   Form2.Width := Screen.Width;  //Width
   Form2.Height := Screen.Height;  //Height
-  Form2.AlphaBlendValue := 55;  //Transparency
   Form2.Color := clblack;  //Color
   Form2.Visible := True;  //Make Visible
 
   ToggleBox1.Checked := False;  //Reset ToggleBox
 
-  TrackBar1.Position := Form2.AlphaBlendValue;  //Reset Displayed Transparency Value
   Trackbar2.Position := 0;  //Reset Displayed Dimension and Position Values
   Trackbar3.Position := 0;  //Reset Displayed Dimension and Position Values
   Trackbar4.Position := Screen.Width;  //Reset Displayed Dimension and Position Values
@@ -467,14 +498,14 @@ end;
 procedure TForm1.Button9Click(Sender: TObject);  //Get full predicted Width and Height of the Monotors and set the Overlay size acording to this
 begin
 
-  ShowMessage('The Software will now attempt to set the Overlay on all Monitors. If this does not look right please adjust the placement with the Position and Dimension TrackBars.');  //Display Infobox
+  ShowMessage('The Software will now attempt to set the Overlay on all Monitors. It will use the Monitor specified in the SpinEdit Control as leftmost Monitor. If this does not look right please adjust the placement or settings manually. If there are Color Issues please use the Fix Color Button.');  //Display Infobox
 
   PageControl1.Enabled := False;  //Toggle PageControl to prevent Bugs
 
   Form2.Width := GetFullWidth;  //Set Full Width
   Form2.Height := GetFullHeight;  //Set Fullt Height
-  Form2.Top := Screen.Monitors[0].Top;  //Set Top
-  Form2.Left := Screen.Monitors[0].Left;  //Set Left
+  Form2.Top := Screen.Monitors[SpinEdit3.Value].Top;  //Set Top
+  Form2.Left := Screen.Monitors[SpinEdit3.Value].Left;  //Set Left
 
   TrackBar2.Position := Form2.Left;  //Reset TrackBar
   TrackBar3.Position := Form2.Top;  //Reset TrackBar
@@ -591,6 +622,30 @@ begin
 
 end;
 
+procedure TForm1.SpinEdit3Change(Sender: TObject);  //Set SpinEdit Bound to Screen Count
+begin
+
+  if SpinEdit3.Value > Screen.MonitorCount - 1 then begin  //Check for Max Screens
+
+    SpinEdit3.Value := Screen.MonitorCount - 1;  //Stop at Max Screens
+
+  end
+  else if SpinEdit3.Value < 0 then begin  //Check 0 Boundary
+
+    SpinEdit3.Value := 0;  //Set to 0
+
+  end;
+
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);  //Window Fit Timer
+begin
+
+  GetWindowRect(IntToStr(Edit1.Text), ExpRect);  //Get Target Window Rect
+  SetWindowPos(Form2.Handle, 0, ExpRect.Left, ExpRect.Top, ExpRect.Width, ExpRect.Height, SWP_NOZORDER or SWP_NOACTIVATE);  //Set New Position of Overlay
+
+end;
+
 procedure TForm1.ToggleBox1Change(Sender: TObject);
 begin
 
@@ -626,6 +681,11 @@ begin
 
   end;
 
+end;
+
+procedure TForm1.ToggleBox3Change(Sender: TObject);  //Toggle State of Window Overlay Timer
+begin
+  Timer1.Enabled := ToggleBox3.Checked;  //Set Timer State
 end;
 
 end.

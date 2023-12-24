@@ -128,8 +128,8 @@ object Form1: TForm1
     Height = 475
     Top = 0
     Width = 475
-    ActivePage = TabSheet2
-    TabIndex = 1
+    ActivePage = TabSheet1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Color'
@@ -496,11 +496,11 @@ object Form1: TForm1
       end
       object GroupBox8: TGroupBox
         Left = 237
-        Height = 161
+        Height = 193
         Top = 119
         Width = 220
         Caption = 'Overlay Options'
-        ClientHeight = 141
+        ClientHeight = 173
         ClientWidth = 216
         TabOrder = 5
         object Button13: TButton
@@ -524,7 +524,7 @@ object Form1: TForm1
         object Button9: TButton
           Left = 10
           Height = 25
-          Top = 104
+          Top = 136
           Width = 196
           Caption = 'Full Size on all Screens'
           OnClick = Button9Click
@@ -538,6 +538,53 @@ object Form1: TForm1
           Caption = 'Fix Color on Multi Monitor Setup'
           OnClick = Button8Click
           TabOrder = 3
+        end
+        object Button18: TButton
+          Left = 10
+          Height = 25
+          Top = 104
+          Width = 150
+          Caption = 'Full Size on Specific Screen'
+          OnClick = Button18Click
+          TabOrder = 4
+        end
+        object SpinEdit3: TSpinEdit
+          Left = 167
+          Height = 23
+          Top = 105
+          Width = 38
+          OnChange = SpinEdit3Change
+          TabOrder = 5
+        end
+      end
+      object GroupBox10: TGroupBox
+        Left = 237
+        Height = 80
+        Top = 320
+        Width = 220
+        Caption = 'Experimental Features'
+        ClientHeight = 60
+        ClientWidth = 216
+        TabOrder = 6
+        object Edit1: TEdit
+          Left = 125
+          Height = 23
+          Top = 14
+          Width = 80
+          Alignment = taCenter
+          NumbersOnly = True
+          TabOrder = 0
+          Text = '0'
+          TextHint = 'Target Handle'
+        end
+        object ToggleBox3: TToggleBox
+          Left = 10
+          Height = 25
+          Top = 13
+          Width = 110
+          Caption = 'Attach to Window'
+          OnChange = ToggleBox3Change
+          TabOrder = 1
         end
       end
     end
@@ -1172,6 +1219,13 @@ object Form1: TForm1
     DefaultExt = '.txt'
     Filter = 'Textfiles|*.txt'
     Left = 145
+    Top = 447
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 10
+    OnTimer = Timer1Timer
+    Left = 174
     Top = 447
   end
 end
