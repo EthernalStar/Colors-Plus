@@ -62,9 +62,13 @@ If you want to switch the z order of Text and Images just use the **Priority** B
   
 ### Information Page
 
-![Window Attributes Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2003.png?raw=true)
-  
+![Window Attributes Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2003.png?raw=true)  
 
+The last Page just has some general Information like showing the **latest Changelog** or viewing the **License Information**.  
+
+It also has some Settings to switch the **Topmost** Status of the Overlay or the Settings Window.  
+You could also disable the **Tray Icon** but this is NOT recommended as it will prevent you from hiding the Settings Window.  
+  
 ### Use Cases
 
 Here are some situations where I use this Tool:  
