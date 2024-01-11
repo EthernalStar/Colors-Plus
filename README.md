@@ -102,7 +102,8 @@ Currently there are a few Features planned for the Future like adding GIFs with 
 
 ## Changelog
 
-Version 1.00: Initial Release  
+Version 1.0.0: Initial Release.  
+Version 1.0.1: Added Information to Executable Manifest.  
   
 
 ## License

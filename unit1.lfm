@@ -953,7 +953,7 @@ object Form1: TForm1
           Height = 60
           Top = 10
           Width = 134
-          Caption = 'Colors+'#13#10'Version 1.00'#13#10'© EthernalStar'#13#10'NZSoft@Protonmail.com'
+          Caption = 'Colors+'#13#10'Version 1.0.1'#13#10'© EthernalStar'#13#10'NZSoft@Protonmail.com'
           ParentColor = False
         end
       end

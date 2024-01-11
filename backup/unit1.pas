@@ -159,7 +159,8 @@ var
                   'along with this program.' + LineEnding +
                   'If not, see https://www.gnu.org/licenses/';  //The String used for Displaying the License Information
 
-  const Changelog = 'Version 1.00: Initial Release';  //The String used for Displaying the latest Changelog
+  const Changelog = 'Version 1.0.0: Initial Release' + LineEnding +
+                    'Version 1.0.1: Added Information to Executable Manifest';  //The String used for Displaying the latest Changelog
 
 implementation
 
@@ -415,6 +416,10 @@ begin
   Form2.BorderStyle := bsNone;  //Reset BorderStyle
 
   ToggleBox2.Checked := False;  //Reset Text Image Priority
+
+  ToggleBox3.Checked := False;  //Reset Window Tracking Status
+
+  Edit1.Text := '0';  //Reset Handle Edit Field
 
   SetWindowLongPtr(Form2.Handle, GWL_EXSTYLE, GetWindowLongPtr(Form2.Handle, GWL_EXSTYLE) OR $00080020);  //Reset Click Through
 
