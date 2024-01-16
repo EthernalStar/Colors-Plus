@@ -22,7 +22,7 @@ If you want to hide the Settings Window (wich you really want to do) just click 
   
 ### Color Page
 
-![Window Attributes Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2001.png?raw=true)  
+![Color Page Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2001.png?raw=true)  
 
 The **Color** Box allows you to pick a preconfigured color for the Overlay by clicking the different Boxes.  
 You could also set a **custom Color** by clicking the Button and choosing one with the Color Picker.  
@@ -47,7 +47,7 @@ The only **Experimental Feature** right now is the **Attach to Window** Button w
   
 ### Text and Images Page
 
-![Window Attributes Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2002.png?raw=true)  
+![Text and Images Page Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2002.png?raw=true)  
 
 The **Text** Field is used for writing Text on the Overlay through the Memo Box.  
 You can also change the Font with the **Edit Font** Button and remove the Text with the **Clear Text** Button.  
@@ -62,14 +62,14 @@ If you want to switch the z order of Text and Images just use the **Priority** B
   
 ### Information Page
 
-![Window Attributes Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2003.png?raw=true)  
+![Information Page Screenshot](https://github.com/EthernalStar/Colors-Plus/blob/main/Images/Colors%20Plus%2003.png?raw=true)  
 
 The last Page just has some general Information like showing the **latest Changelog** or viewing the **License Information**.  
 
 It also has some Settings to switch the **Topmost** Status of the Overlay or the Settings Window.  
 You could also disable the **Tray Icon** but this is NOT recommended as it will prevent you from hiding the Settings Window.  
   
-### Use Cases
+## Use Cases
 
 Here are some situations where I use this Tool:  
 
@@ -82,7 +82,7 @@ Attaching the Overlay to any Window for individual configurations (Use [WinEdit 
 The Possibilities of using this Tool for useful or unuseful things are endless.  
   
 
-### Building
+## Building
 
 There should not be any Problem building the Application because it does not rely on any external installed Packages.  
 To build the Project you need to have the Lazarus IDE Version 2.2.6 installed and clone this Repository to yor local Machine.  
