@@ -2,11 +2,14 @@ unit Unit1;
 
 {$mode objfpc}{$H+}
 
+{$DEFINE GIF_SUPPORT}  //Comment out this line both here and in the other Unit to disable GIF support and therefore the dependency to the TGIFViewer Component
+
 interface
 
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ComCtrls, StdCtrls,
-  ExtCtrls, ExtDlgs, Spin, Unit2;
+  ExtCtrls, ExtDlgs, Spin, Unit2, LCLIntf, LMessages, IniFiles
+  {$IFDEF GIF_SUPPORT}, uGifViewer {$ENDIF};
 
 type
 
@@ -23,17 +26,18 @@ type
     Button16: TButton;
     Button17: TButton;
     Button18: TButton;
+    Button19: TButton;
     Button2: TButton;
+    Button20: TButton;
     Button3: TButton;
     Button4: TButton;
-    Button5: TButton;
-    Button6: TButton;
     Button7: TButton;
     Button8: TButton;
     Button9: TButton;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
     CheckBox3: TCheckBox;
+    CheckBox4: TCheckBox;
     CheckGroup1: TCheckGroup;
     CheckGroup2: TCheckGroup;
     ColorDialog1: TColorDialog;
@@ -41,6 +45,7 @@ type
     FontDialog1: TFontDialog;
     GroupBox1: TGroupBox;
     GroupBox10: TGroupBox;
+    GroupBox11: TGroupBox;
     GroupBox2: TGroupBox;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
@@ -50,10 +55,15 @@ type
     GroupBox8: TGroupBox;
     GroupBox9: TGroupBox;
     Image1: TImage;
+    Image3: TImage;
+    Image4: TImage;
     Label1: TLabel;
     Label10: TLabel;
     Label11: TLabel;
     Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -88,13 +98,16 @@ type
     SpinEdit1: TSpinEdit;
     SpinEdit2: TSpinEdit;
     SpinEdit3: TSpinEdit;
+    SpinEdit4: TSpinEdit;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet4: TTabSheet;
     Timer1: TTimer;
+    Timer2: TTimer;
     ToggleBox1: TToggleBox;
     ToggleBox2: TToggleBox;
     ToggleBox3: TToggleBox;
+    ToggleBox4: TToggleBox;
     TrackBar1: TTrackBar;
     TrackBar2: TTrackBar;
     TrackBar3: TTrackBar;
@@ -102,6 +115,7 @@ type
     TrackBar5: TTrackBar;
     TrackBar6: TTrackBar;
     TrackBar7: TTrackBar;
+    TrackBar8: TTrackBar;
     TrayIcon1: TTrayIcon;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
@@ -112,35 +126,47 @@ type
     procedure Button16Click(Sender: TObject);
     procedure Button17Click(Sender: TObject);
     procedure Button18Click(Sender: TObject);
+    procedure Button19Click(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure Button20Click(Sender: TObject);
+    procedure Button21Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
-    procedure Button6Click(Sender: TObject);
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
     procedure CheckBox1Change(Sender: TObject);
     procedure CheckBox2Change(Sender: TObject);
     procedure CheckBox3Change(Sender: TObject);
+    procedure CheckBox4Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure ColorPanelClick(Sender: TPanel);
+    procedure Image3Click(Sender: TObject);
+    procedure Image4Click(Sender: TObject);
+    procedure Label13Click(Sender: TObject);
     procedure Memo1Change(Sender: TObject);
     procedure RadioButton1Change(Sender: TObject);
     procedure SpinEdit3Change(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
     procedure ToggleBox1Change(Sender: TObject);
     procedure ToggleBox2Change(Sender: TObject);
     procedure ToggleBox3Change(Sender: TObject);
+    procedure ToggleBox4Change(Sender: TObject);
     procedure TrackBar1Change(Sender: TObject);
     procedure TrackBar2Change(Sender: TObject);
     procedure TrackBar6Change(Sender: TObject);
     procedure TrayIcon1Click(Sender: TObject);
     procedure CheckDimensions(Sender: TTrackBar);
     function GetFullWidth: Integer;
-    function GetFullHeight: Integer;
+    function GetFullHeight: Integer;  
+    procedure CustomLabelMouseEnter(Sender: TObject);
+    procedure CustomLabelMouseLeave(Sender: TObject); 
+    const LM_WINEDIT = LM_USER + 1;  //Constant WinEdit Dx / Colors+ Message Communication
+    procedure ReceiveWinEditMessage(var msg: TLMessage); message LM_WINEDIT;
   private
 
   public
@@ -152,6 +178,8 @@ var
   InitialFont: TFont;  //Font used to Reset the Font Dialog
   ExpRect: TRect;  //Variable for the Experimental Window Fit Feature
 
+  Settings: TIniFile;  //Settings ini File
+
   const License = 'Colors+ is licensed under the' + LineEnding +
                   'GNU General Public License v3.0.' + LineEnding +
                   'You should have received a copy of the ' + LineEnding +
@@ -159,14 +187,49 @@ var
                   'along with this program.' + LineEnding +
                   'If not, see https://www.gnu.org/licenses/';  //The String used for Displaying the License Information
 
-  const Changelog = 'Version 1.0.0: Initial Release.' + LineEnding +
-                    'Version 1.0.1: Added Information to Executable Manifest.';  //The String used for Displaying the latest Changelog
-
+  const Changelog = 'Version 1.0.0:' + LineEnding +
+                    ' * Initial Release.' + LineEnding +
+                    'Version 1.0.1:' + LineEnding +
+                    ' * Added Information to Executable Manifest.' + LineEnding +
+                    'Version 1.0.2:' + LineEnding +
+                    ' * Added support for GIFs with Animations.' + LineEnding +
+                    ' * Added Feature to save Settings.' + LineEnding +
+                    ' * Added correction Feature for Window attach mode.' + LineEnding +
+                    ' * Added experimental Features.' + LineEnding +
+                    ' * Rewritten Information Section to be more usable.' + LineEnding +
+                    ' * Added Communication with WinEdit Dx.';  //The String used for Displaying the latest Changelog
 implementation
 
 {$R *.lfm}
 
 { TForm1 }
+
+procedure TForm1.ReceiveWinEditMessage(var msg: TLMessage);  //Receive Messages from WinEditDx
+begin
+
+  Edit1.Text := IntToStr(msg.WParam);  //Set Edit field to received MasterHandle
+
+end;
+
+procedure TForm1.CustomLabelMouseEnter(Sender: TObject);  //Custom Procedure to underline any Label OnMouseEnter
+var
+  tempLabel: TLabel = nil;  //Temporary Label
+begin
+
+  tempLabel := TLabel(Sender);  //Get Label
+  tempLabel.Font.Style := [fsUnderline];  //Set Style
+
+end;
+
+procedure TForm1.CustomLabelMouseLeave(Sender: TObject);  //Custom Procedure to remove underline from any Label OnMouseLeave
+var
+  tempLabel: TLabel = nil;  //Temporary Label
+begin
+
+  tempLabel := TLabel(Sender);  //Get Label
+  tempLabel.Font.Style := [];  //Unset Style
+
+end;
 
 function TForm1.GetFullWidth: Integer;  //Get combined Screen Width
 var
@@ -270,6 +333,18 @@ begin
 
 end;
 
+procedure TForm1.Button20Click(Sender: TObject);  //See License Information Button
+begin
+
+  ShowMessage(License);  //Display License Information
+
+end;
+
+procedure TForm1.Button21Click(Sender: TObject);
+begin
+
+end;
+
 procedure TForm1.Button10Click(Sender: TObject);  //Fit the Overlay on the Current Screen
 begin
 
@@ -304,7 +379,11 @@ procedure TForm1.Button12Click(Sender: TObject);  //Delete all Images
 var
   i: Integer = 0;  //Counter Variable for Dynamic Images
   img: TImage = nil;  //Temporary Image Control
+  {$IFDEF GIF_SUPPORT} gif: TGIFViewer = nil; {$ENDIF}  //Temporary GFIViewer Control
+  clear: Array of TComponent;  //Array to temporary save Elements to clear
 begin
+
+  clear := [];  //Initialize Array so that the IDE displays no Warning
 
   Form2.Image1.Picture.Clear;  //Reset Fullscreen Stretched Image
 
@@ -316,11 +395,35 @@ begin
 
       if img.Caption = 'CDI' then begin  //Check if Custom Dynamic Image (Through 'CDI' Caption)
 
-        img.Picture.Clear;  //Clear Dynamic Image
+        //img.Picture.Clear;  //Clear Dynamic Image
+
+        SetLength(clear, Length(clear) + 1);  //Increase Length of Array by 1
+        clear[Length(clear) - 1] := img;  //Add Object to Array
+
+      end;
+
+    end
+    {$IFDEF GIF_SUPPORT}
+    else if Form2.Components[i] is TGIFViewer then begin  //Check for TImage
+
+      gif := TGIFViewer(Form2.Components[i]);  //Assign Image
+
+      if gif.Caption = 'CDI' then begin  //Check if Custom Dynamic Image (Through 'CDI' Caption)
+
+        //gif.Destroy;  //Clear Dynamic Image 
+
+        SetLength(clear, Length(clear) + 1);  //Increase Length of Array by 1
+        clear[Length(clear) - 1] := gif;  //Add Object to Array
 
       end;
 
     end;
+  {$ENDIF}
+  end;
+
+  for i := 0 to Length(clear) - 1 do begin  //Iterate though clear Array
+
+    clear[i].Destroy;  //Remove all Elements from Array
 
   end;
 
@@ -329,7 +432,7 @@ end;
 procedure TForm1.Button13Click(Sender: TObject);  //Makes the Overlay appear as a normal Window wich can be edited by hand
 begin
 
-  ShowMessage('You can now freely move the Overlay as a normal Window.' + LineEnding + 'After you are done you should doubleclick the Overlay Window.');  //Show Info Message
+  ShowMessage('You can now freely move the Overlay as a normal Window.' + LineEnding + 'After you are done you should doubleclick the Overlay Window.' + LineEnding + 'You can also press the return key while the Overlay is focused.');  //Show Info Message
   
   Form2.BorderStyle := bsSizeable;  //Make Overlay Form Sizeable
 
@@ -342,7 +445,7 @@ begin
 
   if OpenPictureDialog1.Execute then begin
 
-    Form2.CreateNewImage(OpenPictureDialog1.FileName);  //Call Procedure
+    Form2.CreateNewImage(OpenPictureDialog1.FileName, OpenPictureDialog1.FileName.EndsWith('.gif'));  //Call Procedure
 
   end;
 
@@ -392,6 +495,13 @@ begin
 
 end;
 
+procedure TForm1.Button19Click(Sender: TObject);  //See latest Changelog Button
+begin
+
+  ShowMessage(Changelog);  //See latest Changelog
+
+end;
+
 procedure TForm1.Button2Click(Sender: TObject);  //Open ColorDialog
 begin
 
@@ -412,6 +522,10 @@ end;
 
 procedure TForm1.Button4Click(Sender: TObject);  //Reset Overlay
 begin
+
+  ToggleBox4.Checked := False;  //Reset Strobelight Effect
+
+  TrackBar8.Position := 0;  //Reset Strobelight Trackbar Effect
 
   Form2.BorderStyle := bsNone;  //Reset BorderStyle
 
@@ -455,20 +569,6 @@ begin
 
   FontDialog1.Font := InitialFont;  //Reset Font in Dialog
   Form2.Label1.Font := InitialFont;  //Reset Font for Label
-
-end;
-
-procedure TForm1.Button5Click(Sender: TObject);  //See latest Changelog Button
-begin
-
-  ShowMessage(Changelog);  //See latest Changelog
-
-end;
-
-procedure TForm1.Button6Click(Sender: TObject);  //See License Information Button
-begin
-
-  ShowMessage(License);  //Display License Information
 
 end;
 
@@ -569,11 +669,80 @@ begin
 
 end;
 
+procedure TForm1.CheckBox4Change(Sender: TObject);  //Auto Save/Load Settings Checkbox Change
+begin
+
+  if NOT CheckBox4.Checked then begin  //Check for disabled Saving Settings
+
+    if FileExists(ExtractFilePath(Application.ExeName) + 'Colors+.ini') then begin  //Check if Settings where allready created
+
+      if MessageDlg('Unsetting this Option will delete the Settings File.' + LineEnding + 'Do you want to continue?', mtWarning, [mbYes, mbNo], 0) = mrYes then begin  //Ask if user wnats to delete current settings
+
+        DeleteFile(ExtractFilePath(Application.ExeName) + 'Colors+.ini');  //Delete the Settings File
+
+      end
+      else begin
+
+        CheckBox4.Checked := True;  //Check Checkbox again
+
+      end;
+
+    end;
+
+  end;
+
+end;
+
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);  //On Close Cleanup
 begin
 
   TrayIcon1.Visible := False;  //Hide TrayIcon before Closing to prevent Leftovers
 
+end;
+
+procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  if CanClose = True then begin  //Check if Close will actually happen
+
+    if CheckBox4.Checked then begin
+
+      Settings := TIniFile.Create(ExtractFilePath(Application.ExeName) + 'Colors+.ini');  //Create Settings File
+
+      try
+                                                                                            
+        Settings.WriteString('Settings', 'Disable Topmost Status', BoolToStr(CheckBox1.Checked));
+        Settings.WriteString('Settings', 'Disable Overlay Topmost Status', BoolToStr(CheckBox3.Checked));
+        Settings.WriteString('Settings', 'Disable Tray Icon', BoolToStr(CheckBox2.Checked));
+        Settings.WriteString('Settings', 'Strobelight Effect', BoolToStr(ToggleBox4.Checked));
+        Settings.WriteString('Settings', 'Strobelight Intensity', IntToStr(TrackBar8.Position));
+        Settings.WriteString('Settings', 'Image Dimensions W', IntToStr(SpinEdit1.Value));
+        Settings.WriteString('Settings', 'Image Dimensions H', IntToStr(SpinEdit2.Value));  
+        Settings.WriteString('Settings', 'Image Stretched Res', BoolToStr(RadioButton2.Checked)); 
+        Settings.WriteString('Settings', 'Text Position X', IntToStr(TrackBar6.Position));
+        Settings.WriteString('Settings', 'Text Position Y', IntToStr(TrackBar7.Position));
+        Settings.WriteString('Settings', 'Transparency', IntToStr(TrackBar1.Position));
+        Settings.WriteString('Settings', 'Color', ColorToString(Form2.Color));
+        Settings.WriteString('Settings', 'Attach to Window', BoolToStr(ToggleBox3.Checked));
+        Settings.WriteString('Settings', 'Handle', Edit1.Text);
+        Settings.WriteString('Settings', 'Correction', IntToStr(SpinEdit4.Value));    
+        Settings.WriteString('Settings', 'X', IntToStr(TrackBar2.Position));
+        Settings.WriteString('Settings', 'Y', IntToStr(TrackBar3.Position));
+        Settings.WriteString('Settings', 'W', IntToStr(TrackBar4.Position));
+        Settings.WriteString('Settings', 'H', IntToStr(TrackBar5.Position));
+        Settings.WriteString('Settings', 'Auto Save/Load Settings', BoolToStr(CheckBox4.Checked));
+        Settings.WriteString('Settings', 'Overlay Text', '"' + StringReplace(Memo1.Text, #13#10, '?|*<|?', [rfReplaceAll]) + '"');
+        Settings.WriteString('Settings', 'Font Size', IntToStr(Form2.Label1.Font.Size));
+        Settings.WriteString('Settings', 'Font Color', ColorToString(Form2.Label1.Font.Color));
+
+      finally
+
+        Settings.Free;  //Free Settings File
+
+      end;
+
+    end;
+
+  end;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);  //From Creation Events
@@ -613,6 +782,27 @@ begin
 
 end;
 
+procedure TForm1.Image3Click(Sender: TObject);  //Github Icon Click
+begin
+
+  OpenUrl('https://github.com/EthernalStar/Colors-Plus');  //Visit Github Repo Page
+
+end;
+
+procedure TForm1.Image4Click(Sender: TObject);  //Codeberg Icon Click
+begin
+
+  OpenUrl('https://codeberg.org/EthernalStar/Colors-Plus');  //Visit Codeberg Repo Page
+
+end;
+
+procedure TForm1.Label13Click(Sender: TObject);  //Mail Label Click
+begin
+
+  OpenUrl('mailto:NZSoft@Protonmail.com');  //Open Email with mailto
+
+end;
+
 procedure TForm1.Memo1Change(Sender: TObject);  //Create Text on Overlay
 begin
 
@@ -647,7 +837,16 @@ procedure TForm1.Timer1Timer(Sender: TObject);  //Window Fit Timer
 begin
 
   GetWindowRect(StrToInt(Edit1.Text), ExpRect);  //Get Target Window Rect
-  SetWindowPos(Form2.Handle, 0, ExpRect.Left, ExpRect.Top, ExpRect.Width, ExpRect.Height, SWP_NOZORDER or SWP_NOACTIVATE);  //Set New Position of Overlay
+  SetWindowPos(Form2.Handle, 0, ExpRect.Left - SpinEdit4.Value, ExpRect.Top, ExpRect.Width + (2 * SpinEdit4.Value), ExpRect.Height + SpinEdit4.Value, SWP_NOZORDER or SWP_NOACTIVATE);  //Set New Position of Overlay
+
+end;
+
+procedure TForm1.Timer2Timer(Sender: TObject);
+begin
+
+  Timer2.Interval := (TrackBar8.Max + 1) - TrackBar8.Position;
+
+  Button3.Click;
 
 end;
 
@@ -691,6 +890,33 @@ end;
 procedure TForm1.ToggleBox3Change(Sender: TObject);  //Toggle State of Window Overlay Timer
 begin
   Timer1.Enabled := ToggleBox3.Checked;  //Set Timer State
+end;
+
+procedure TForm1.ToggleBox4Change(Sender: TObject);  //Strobelight Effect Button
+begin
+
+  if ToggleBox4.Checked = True then begin  //Check for Togglebox Status
+
+    if MessageDlg('WARNING: This feature may potentially trigger seizures for people with photosensitive epilepsy as the Overlay color will change fast and randomly.' + LineEnding + 'Do you still want to enable this?', mtWarning, [mbYes, mbNo], 0) = mrYes then begin  //Display Epilepsy Warning
+
+      Timer2.Enabled := ToggleBox4.Checked;  //Set Timer Status
+      ToggleBox4.Caption := 'Disable Strobelight Effect';
+
+    end
+    else begin
+
+      ToggleBox4.Checked := False;  //Reset ToggleBox Status
+
+    end;
+
+  end
+  else begin
+
+    ToggleBox4.Caption := 'Enable Strobelight Effect';
+    Timer2.Enabled := ToggleBox4.Checked;  //Set Timer Status
+
+  end;
+
 end;
 
 end.

@@ -17,8 +17,8 @@
     <VersionInfo>
       <UseVersionInfo Value="True"/>
       <MajorVersionNr Value="1"/>
-      <RevisionNr Value="1"/>
-      <StringTable Comments="Custom configureable Windows Overlay." CompanyName="EthernalStar" FileDescription="Custom configureable Windows Overlay." InternalName="Colors+" LegalCopyright="EthernalStar" LegalTrademarks="EthernalStar" OriginalFilename="Colors+" ProductName="Colors+" ProductVersion="1.0.1.0"/>
+      <RevisionNr Value="2"/>
+      <StringTable Comments="Custom configureable Windows Overlay." CompanyName="EthernalStar" FileDescription="Custom configureable Windows Overlay." InternalName="Colors+" LegalCopyright="EthernalStar" LegalTrademarks="EthernalStar" OriginalFilename="Colors+" ProductName="Colors+" ProductVersion="1.0.2.0"/>
     </VersionInfo>
     <BuildModes>
       <Item Name="Default" Default="True"/>
@@ -31,6 +31,9 @@
       <FormatVersion Value="2"/>
     </RunParams>
     <RequiredPackages>
+      <Item>
+        <PackageName Value="gifviewer_pkg"/>
+      </Item>
       <Item>
         <PackageName Value="LCL"/>
       </Item>
