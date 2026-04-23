@@ -1,5 +1,7 @@
 # ![Logo](./Icon.png?raw=true) Colors+
 
+## New contact E-Mail: StarstormSigma@protonmail.com
+
 **Colors+** is a Tool for creating and editing a custom Window Overlay with Text and Images.
 
 It can be used for many purposes like streaming or reducing eyestrain.
@@ -74,7 +76,7 @@ As of v1.0.2 **Auto Save/Load Settings** toggles the ability to save all Setting
 * The Button "**See License Information**" just shows the License of this Project.
 
 There are also links to my Repositories on [Github](https://github.com/EthernalStar) or [Codeberg](https://codeberg.org/EthernalStar) where you could always find the latest Version.
-If you have questions please don't hesitate to contact me over [E-Mail](mailto:NZSoft@Protonmail.com) or create an Issue on the Project Page.
+If you have questions please don't hesitate to contact me over [E-Mail](mailto:StarstormSigma@protonmail.com) or create an Issue on the Project Page.
 
 There are also a few experimental features like the **Strobelight Effect**.
 **WARNING: This feature may potentially trigger seizures for people with photosensitive epilepsy as the Overlay color will change fast and randomly.**
